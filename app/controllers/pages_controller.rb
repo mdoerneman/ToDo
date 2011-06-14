@@ -12,29 +12,38 @@ class PagesController < ApplicationController
     resp = RestClient.get(url + "getProjects", :accept => :json, :params => params)
     @projects = JSON.parse(resp.body)
 
+    prev = Hash.new
 
-    params[:project_id] = @projects[0]["id"]
-    resp = RestClient.get(url + "getUncompletedItems", :accept => :json, :params => params)
-    arr = JSON.parse(resp.body)
-    @tasks.push(arr[rand(arr.size)]) unless arr.empty?
-
-
-    group_tasks = []
     @projects.each do |p|
-      if p["item_order"] > 2
-        params[:project_id] = p["id"]
-        resp = RestClient.get(url + "getUncompletedItems", :accept => :json, :params => params)
-        group_tasks.concat(JSON.parse(resp.body))
+
+      params[:project_id] = p["id"]
+      tasks = JSON.parse((RestClient.get(url + "getUncompletedItems", :accept => :json, :params => params)).body)
+      tasks.each do |t|
+        t["project_name"] = p["name"]
       end
+
+      if p["indent"] > 1
+        prev["tasks"].concat(tasks)
+      else
+        p["tasks"] = tasks
+        prev = p
+      end
+
+
     end
-    @tasks.push(group_tasks[rand(group_tasks.size)])  unless group_tasks.empty?
 
 
+    @projects.each do |p|
 
-    params[:project_id] = @projects[1]["id"]
-    resp = RestClient.get(url + "getUncompletedItems", :accept => :json, :params => params)
-    arr = JSON.parse(resp.body)
-    @tasks.push(arr[rand(arr.size)]) unless arr.empty?
+      unless p["tasks"].nil?
+        task = p["tasks"][rand(p["tasks"].size)]
+        task["color"] = p["color"]
+        @tasks.push(task)
+      end
+
+    end
+
+
 
   end
 
