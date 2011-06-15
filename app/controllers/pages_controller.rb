@@ -49,7 +49,12 @@ class PagesController < ApplicationController
       unless p["tasks"].nil?
         p["tasks"].each do |task|
           task["color"] = p["color"]
-          tasks.push(task) if task["due_date"]
+          unless task["due_date"].nil?
+            date_arr = task["due_date"].split(" ")
+            t = Time.local(date_arr[4],date_arr[1],date_arr[2])
+            #logger.debug t.to_s + " " + task["content"]
+            tasks.push(task) if t.to_date < Date.today.advance(:days => 2)
+          end
         end
 
         if tasks.length == 0 and params[:get_more]
