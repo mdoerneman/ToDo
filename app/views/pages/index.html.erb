@@ -1,11 +1,20 @@
-<% @projects.each do |p| %>
-    <p><% p %></p>
+<div style="margin:15px;padding:15px;">
+
+<h1>Enter API Key</h1>
+
+
+
+<% form_tag('pages/tasks/', :method => "get") do %>
+
+  <p>
+    <%= text_field_tag 'token' %>
+  </p>
+  <p>
+    <%= submit_tag 'Get Tasks' %>
+  </p>
+
+
 <% end %>
 
 
-<h1>Tasks for today</h1>
-
-
-<% @tasks.each do |a| %>
-<div style="width:500px;margin:15px;padding:15px;background-color:<%= a["color"] %>;"><b><%= a["project_name"] %></b> | <%= a["content"] %></div>
-<% end %>
+</div>

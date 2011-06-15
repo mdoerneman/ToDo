@@ -4,10 +4,19 @@ class PagesController < ApplicationController
 
   def index
 
-    url = "http://todoist.com/API/"
-    params[:token] = "b6eaa5f86a7fff727722ab3fcfa07db236ff651f"
-    @tasks = []
+    #if request.post?
 
+      #redirect_to :action => 'tasks', :id => params[:token]
+
+    #end
+
+  end
+
+  def tasks
+
+    url = "http://todoist.com/API/"
+    @tasks = []
+    @token = params[:token]
 
     resp = RestClient.get(url + "getProjects", :accept => :json, :params => params)
     @projects = JSON.parse(resp.body)
@@ -35,15 +44,50 @@ class PagesController < ApplicationController
 
     @projects.each do |p|
 
+      tasks = []
+
       unless p["tasks"].nil?
-        task = p["tasks"][rand(p["tasks"].size)]
-        task["color"] = p["color"]
-        @tasks.push(task)
+        p["tasks"].each do |task|
+          task["color"] = p["color"]
+          tasks.push(task) if task["due_date"]
+        end
+
+        if tasks.length == 0 and params[:get_more]
+          task = p["tasks"][rand(p["tasks"].size)]
+          task["color"] = p["color"]
+          params[:id] = task["id"]
+          params[:date_string] = "today"
+          RestClient.get(url + "updateItem", :accept => :json, :params => params)
+          @tasks.push(task)
+        else
+          @tasks.concat(tasks)
+        end
+
       end
 
     end
 
 
+
+  end
+
+  def skip
+
+    url = "http://todoist.com/API/"
+
+    params[:date_string] = ""
+    RestClient.get(url + "updateItem", :accept => :json, :params => params)
+    redirect_to :action => 'tasks', :get_more => 't', :token => params[:token]
+
+  end
+
+  def done
+
+    url = "http://todoist.com/API/"
+    
+    params[:ids] = Array.new.push(params[:id])
+    RestClient.get(url + "completeItems", :accept => :json, :params => params)
+    redirect_to :action => 'tasks', :token => params[:token]
 
   end
 
