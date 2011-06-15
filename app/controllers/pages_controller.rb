@@ -45,11 +45,14 @@ class PagesController < ApplicationController
     @projects.each do |p|
 
       tasks = []
+      task_pool = []
 
       unless p["tasks"].nil?
         p["tasks"].each do |task|
           task["color"] = p["color"]
-          unless task["due_date"].nil?
+          if task["due_date"].nil?
+            task_pool.push(task)
+          else
             date_arr = task["due_date"].split(" ")
             t = Time.local(date_arr[4],date_arr[1],date_arr[2])
             #logger.debug t.to_s + " " + task["content"]
@@ -57,8 +60,9 @@ class PagesController < ApplicationController
           end
         end
 
-        if tasks.length == 0 and params[:get_more]
-          task = p["tasks"][rand(p["tasks"].size)]
+        if tasks.length == 0 and params[:get_more] and task_pool.length > 0
+          #task = p["tasks"][rand(p["tasks"].size)]
+          task = task_pool[rand(task_pool.length)]
           task["color"] = p["color"]
           params[:id] = task["id"]
           params[:date_string] = "today"
