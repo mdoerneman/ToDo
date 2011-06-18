@@ -9,7 +9,7 @@ Todo::Application.routes.draw do
   # Keep in mind you can assign values other than :controller and :action
 
   match 'pages' => 'pages#index'
-  match 'pages/skip/' => 'pages#skip'
+  match 'pages/snooze/' => 'pages#snooze'
   match 'pages/done/' => 'pages#done'
   match 'pages/tasks/' => 'pages#tasks'
 

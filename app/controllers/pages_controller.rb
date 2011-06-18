@@ -80,11 +80,11 @@ class PagesController < ApplicationController
 
   end
 
-  def skip
+  def snooze
 
     url = "http://todoist.com/API/"
 
-    params[:date_string] = ""
+    params[:date_string] = "tomorrow"
     RestClient.get(url + "updateItem", :accept => :json, :params => params)
     redirect_to :action => 'tasks', :get_more => 't', :token => params[:token]
 
@@ -93,9 +93,22 @@ class PagesController < ApplicationController
   def done
 
     url = "http://todoist.com/API/"
-    
+
     params[:ids] = Array.new.push(params[:id])
-    RestClient.get(url + "completeItems", :accept => :json, :params => params)
+
+    resp = RestClient.get(url + "updateRecurringDate", :accept => :json, :params => params)
+
+    #logger.debug "\n\nOutput:" + JSON.parse(resp)[0]["date_string"] + "\n\n"
+
+    unless JSON.parse(resp)[0]["date_string"].include?("every")
+
+      RestClient.get(url + "completeItems", :accept => :json, :params => params)
+      #logger.debug "\n\nOutput: Mark Complete\n\n"
+
+    end
+
+
+
     redirect_to :action => 'tasks', :token => params[:token]
 
   end
