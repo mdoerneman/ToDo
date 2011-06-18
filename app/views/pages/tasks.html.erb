@@ -11,7 +11,11 @@
 <% @tasks.each do |a| %>
 <div style="margin:15px;padding:15px;background-color:<%= a["color"] %>;"><b><%= a["project_name"] %></b> | <%= a["content"] %>
 
-  <!--<div style="float:right;width:50px;"><%= link_to 'snooze', :action => 'snooze', :id => a["id"], :token => @token %></div>-->
+  <div style="float:right;width:80px;">&nbsp;
+    <% unless a["date_string"].include?("every") %>
+      <%= link_to 'snooze', :action => 'snooze', :id => a["id"], :token => @token %>
+    <% end %>
+  </div>
   <div style="float:right;width:50px;"><%= link_to 'done', :action => 'done', :id => a["id"], :token => @token %></div>
 
 </div>

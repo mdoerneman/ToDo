@@ -24,19 +24,19 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="pages_controller.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="pages_controller.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/pages_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="100" column="5" selection-start="2268" selection-end="2268" vertical-scroll-proportion="0.54607975">
+            <state line="86" column="30" selection-start="1902" selection-end="1902" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tasks.html.erb" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="tasks.html.erb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/views/pages/tasks.html.erb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="130" selection-start="411" selection-end="411" vertical-scroll-proportion="-8.863636">
+            <state line="13" column="33" selection-start="314" selection-end="314" vertical-scroll-proportion="0.27659574">
               <folding />
             </state>
           </provider>
@@ -90,8 +90,8 @@
         <option value="$PROJECT_DIR$/app/views/layouts/application.html.erb" />
         <option value="$PROJECT_DIR$/app/views/pages/index.html.erb" />
         <option value="$PROJECT_DIR$/config/routes.rb" />
-        <option value="$PROJECT_DIR$/app/views/pages/tasks.html.erb" />
         <option value="$PROJECT_DIR$/app/controllers/pages_controller.rb" />
+        <option value="$PROJECT_DIR$/app/views/pages/tasks.html.erb" />
       </list>
     </option>
   </component>
@@ -527,16 +527,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/pages/tasks.html.erb">
+    <entry file="file://$PROJECT_DIR$/app/controllers/pages_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="130" selection-start="411" selection-end="411" vertical-scroll-proportion="-8.863636">
+        <state line="86" column="30" selection-start="1902" selection-end="1902" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/pages_controller.rb">
+    <entry file="file://$PROJECT_DIR$/app/views/pages/tasks.html.erb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="100" column="5" selection-start="2268" selection-end="2268" vertical-scroll-proportion="0.54607975">
+        <state line="13" column="33" selection-start="314" selection-end="314" vertical-scroll-proportion="0.27659574">
           <folding />
         </state>
       </provider>

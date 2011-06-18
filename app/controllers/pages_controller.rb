@@ -84,7 +84,7 @@ class PagesController < ApplicationController
 
     url = "http://todoist.com/API/"
 
-    params[:date_string] = "tomorrow"
+    params[:date_string] = "+2"
     RestClient.get(url + "updateItem", :accept => :json, :params => params)
     redirect_to :action => 'tasks', :get_more => 't', :token => params[:token]
 
