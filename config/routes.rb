@@ -10,6 +10,7 @@ Todo::Application.routes.draw do
 
   match 'pages' => 'pages#index'
   match 'pages/snooze/' => 'pages#snooze'
+  match 'pages/skip/' => 'pages#skip'
   match 'pages/done/' => 'pages#done'
   match 'pages/tasks/' => 'pages#tasks'
 
