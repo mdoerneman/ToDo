@@ -56,6 +56,7 @@ class PagesController < ApplicationController
 
       #tasks without a due date
       task_pool = []
+      priority_task_pool = []
 
       recurring = 0
 
@@ -67,36 +68,34 @@ class PagesController < ApplicationController
 
           #no due date? - add it to the pool
           if task["due_date"].nil?
-            task_pool.push(task)
+            if task["priority"] > 1
+              priority_task_pool.push(task)
+            else
+              task_pool.push(task)
+            end
           #get tasks that have a due date up to 1 day in the future
           else
             date_arr = task["due_date"].split(" ")
             t = Time.local(date_arr[4],date_arr[1],date_arr[2])
 
-            if !task["date_string"].include?("every") and t < Date.today
-              #clear due date
-              params[:id] = task["id"]
-              params[:date_string] = ""
-              RestClient.get(url + "updateItem", :accept => :json, :params => params)
-              
-              #add to task pool
-              task_pool.push(task)
-            else
-              if t.to_date < Date.today.advance(:days => 1)
-                tasks.push(task) 
-                recurring += 1 if task["date_string"].include?("every")
-              end
+            if t.to_date < Date.today.advance(:days => 1)
+              tasks.push(task) 
+              recurring += 1 if task["date_string"].include?("every")
             end
-
+            
           end
 
         end
 
         non_recurring_tasks = tasks.length - recurring
 
-        #get a random task from pool and set date_string to today only if no no-recurring tasks collected
+        #get a random task from pool and set date_string to today only if no non-recurring tasks collected
         if non_recurring_tasks == 0 and params[:get_more] and task_pool.length > 0
-          task = task_pool[rand(task_pool.length)]
+          if priority_task_pool.length > 0
+            task = priority_task_pool[rand(priority_task_pool.length)]
+          else  
+            task = task_pool[rand(task_pool.length)]
+          end
           task["color"] = p["color"]
           params[:id] = task["id"]
           params[:date_string] = "today"
