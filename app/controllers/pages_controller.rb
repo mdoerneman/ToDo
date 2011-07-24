@@ -69,7 +69,6 @@ class PagesController < ApplicationController
           #no due date? - add it to the pool
           if task["due_date"].nil?
             if task["priority"] > 1
-              task["content"] += "*"
               priority_task_pool.push(task)
             else
               task_pool.push(task)

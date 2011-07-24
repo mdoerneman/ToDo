@@ -11,6 +11,8 @@
 <% @tasks.each do |a| %>
   <div style="margin:15px;padding:15px;background-color:<%= a["color"] %>;"><b><%= a["project_name"] %></b> | <%= a["content"] %>
 
+  <% if a["priority"] > 1 %>*<% end %>
+
   <div style="float:right;width:50px;"><%= link_to 'done', :action => 'done', :id => a["id"], :token => @token %></div>
 
   <div style="float:right;width:140px;">&nbsp;
