@@ -78,6 +78,10 @@ class PagesController < ApplicationController
             date_arr = task["due_date"].split(" ")
             t = Time.local(date_arr[4],date_arr[1],date_arr[2])
 
+            #calcualte days overdue so we use in view
+            days_overdue = Date.today - t.to_date
+            task["days_overdue"] = days_overdue.to_i
+
             if t.to_date < Date.today.advance(:days => 1)
               tasks.push(task) 
               recurring += 1 if task["date_string"].include?("every")

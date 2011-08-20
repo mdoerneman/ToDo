@@ -9,7 +9,8 @@
 
 
 <% @tasks.each do |a| %>
-  <div style="margin:15px;padding:15px;background-color:<%= a["color"] %>;"><b><%= a["project_name"] %></b> | <%= a["content"] %>
+
+  <div style="margin:15px;background-color:<%= a["color"] %>;padding:<%= 2 + (2 * a["days_overdue"]) %>px 15px;"><b><%= a["project_name"] %></b> | <%= a["content"] %>
 
   <% if a["priority"] > 1 %>*<% end %>
 
