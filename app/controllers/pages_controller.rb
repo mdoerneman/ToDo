@@ -60,36 +60,53 @@ class PagesController < ApplicationController
 
       recurring = 0
 
+      prev = Hash.new
+
       #if tasks exist for this project
       unless p["tasks"].nil?
 
         p["tasks"].each do |task|
+
+          task["sub_tasks"] = []
+          task["days_overdue"] = 0
           task["color"] = p["color"]
 
-          #no due date? - add it to the pool
-          if task["due_date"].nil?
-            if task["priority"] > 1
-              priority_task_pool.push(task)
+          if task["indent"] < 2          
+
+            #no due date? - add it to the pool
+            if task["due_date"].nil?
+              if task["priority"] > 1
+                priority_task_pool.push(task)
+              else
+                task_pool.push(task)
+              end
+            #get tasks that have a due date up to 1 day in the future
             else
-              task_pool.push(task)
-            end
-          #get tasks that have a due date up to 1 day in the future
-          else
-            date_arr = task["due_date"].split(" ")
-            t = Time.local(date_arr[4],date_arr[1],date_arr[2])
+              date_arr = task["due_date"].split(" ")
+              t = Time.local(date_arr[4],date_arr[1],date_arr[2])
 
-            #calcualte days overdue so we use in view
-            days_overdue = Date.today - t.to_date
-            task["days_overdue"] = days_overdue.to_i
+              #calcualte days overdue so we use in view
+              days_overdue = Date.today - t.to_date
+              task["days_overdue"] = days_overdue.to_i
 
-            if t.to_date < Date.today.advance(:days => 1)
-              tasks.push(task) 
-              recurring += 1 if task["date_string"].include?("every")
-            end
-            
+              if t.to_date < Date.today.advance(:days => 1)
+                tasks.push(task) 
+                recurring += 1 if task["date_string"].include?("every")
+              end
+              
+            end #task["due_date"].nil?
+
+            prev = task
+
+          else #indented task
+
+            task["days_overdue"] = prev["days_overdue"]
+            task["content"] = prev["content"] + " : " + task["content"]
+            prev["sub_tasks"].push(task)
+
           end
 
-        end
+        end #p["tasks"].each
 
         non_recurring_tasks = tasks.length - recurring
 
@@ -110,7 +127,7 @@ class PagesController < ApplicationController
         @tasks.concat(tasks)
       
 
-      end #unless
+      end #unless tasks nil
 
 
     end #@projects.each
@@ -148,9 +165,11 @@ class PagesController < ApplicationController
 
     params[:ids] = Array.new.push(params[:id])
 
-    resp = RestClient.get(url + "updateRecurringDate", :accept => :json, :params => params)
+    if params[:recur]
+      RestClient.get(url + "updateRecurringDate", :accept => :json, :params => params)
+    else
 
-    unless JSON.parse(resp)[0]["date_string"].include?("every")
+    #unless JSON.parse(resp)[0]["date_string"].include?("every")
       RestClient.get(url + "completeItems", :accept => :json, :params => params)
     end
 

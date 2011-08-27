@@ -1,30 +1,35 @@
-<% @projects.each do |p| %>
-    <p><% p %></p>
-<% end %>
-
 
 <div style="margin:15px;padding:15px;">
 
 <h1>Tasks for today</h1>
 
+<p>Individual tasks should take 30 min or less : If tasks grow too tall, break into smaller chunks</p>
 
 <% @tasks.each do |a| %>
 
-  <div style="margin:15px;background-color:<%= a["color"] %>;padding:<%= 2 + (2 * a["days_overdue"]) %>px 15px;"><b><%= a["project_name"] %></b> | <%= a["content"] %>
+  <% pid = a["id"]; if a["sub_tasks"].size > 0; a = a["sub_tasks"][0]; end %>
 
-  <% if a["priority"] > 1 %>*<% end %>
+  <div style="margin:15px;background-color:<%= a["color"] %>;padding:<%= 2 + (2 * a["days_overdue"]) %>px 15px;overflow:hidden;">
 
-  <div style="float:right;width:50px;"><%= link_to 'done', :action => 'done', :id => a["id"], :token => @token %></div>
+    <div style="float:left;"><b><%= a["project_name"] %></b> |&nbsp;</div>
+    <div style="float:left;width:70%">
+      <%= a["content"] %> 
+      <% if a["priority"] > 1 %>*<% end %>
+    </div>
 
-  <div style="float:right;width:140px;">&nbsp;
-    <% unless a["date_string"].include?("every") %>
-      <%= link_to 'snooze', :action => 'snooze', :id => a["id"], :token => @token %>&nbsp;
-      <%= link_to 'skip', :action => 'skip', :id => a["id"], :token => @token %>
-    <% end %>
-  </div>
+    <% recur = a["date_string"].include?("every") %>
+
+    <div style="float:right;width:50px;"><%= link_to 'done', :action => 'done', :id => a["id"], :recur => recur, :token => @token %></div>
+
+    <div style="float:right;width:140px;">&nbsp;
+      <% unless recur %>
+        <%= link_to 'snooze', :action => 'snooze', :id => pid, :token => @token %>&nbsp;
+        <%= link_to 'skip', :action => 'skip', :id => pid, :token => @token %>
+      <% end %>
+    </div>
   
 
-</div>
+  </div>
 
 <% end %>
 
